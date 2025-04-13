@@ -55,6 +55,9 @@ class MainActivity : ComponentActivity() {
                         composable("Highlight_Equipment") { // composable for "home" screen
                             FeedScreen(navController)
                         }
+                        composable("search"){
+                            Search_Equipment(navController)
+                        }
                         composable ("user" ){
                             loginInterface()
                         }
