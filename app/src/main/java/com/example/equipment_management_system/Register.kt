@@ -26,11 +26,15 @@ import androidx.navigation.NavController
 import kotlinx.coroutines.launch
 
 @Composable
-fun loginInterface(navController: NavController){
+fun Register(navController: NavController){
     val padding = 16.dp
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    var loginStatus by remember { mutableStateOf("") }
+    var contact by remember { mutableStateOf("") }
+    var department by remember { mutableStateOf("") }
+    var remark by remember { mutableStateOf("") }
+
+    var registerStatus by remember { mutableStateOf("") }
     val coroutineScope = rememberCoroutineScope()
 
     Column(
@@ -58,29 +62,52 @@ fun loginInterface(navController: NavController){
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(Modifier.size(padding))
+        Text("Contact Number")
+        TextField(
+            maxLines = 1,
+            value = contact,
+            onValueChange = { contact = it },
+            modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(Modifier.size(padding))
+
+        Text("Department")
+        TextField(
+            maxLines = 1,
+            value = department,
+            onValueChange = { department = it },
+            modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(Modifier.size(padding))
+
+        Text("Remark")
+        TextField(
+            maxLines = 1,
+            value = remark,
+            onValueChange = { remark = it },
+            modifier = Modifier.fillMaxWidth()
+        )
+        Spacer(Modifier.size(padding))
 
         Button(onClick = {
             coroutineScope.launch {
-                loginStatus = LoginClient.login(email, password)
-                Log.i("Login", loginStatus)
+                registerStatus = LoginClient.register(email, password,contact,department,remark)
+                Log.i("Register", registerStatus)
             }
-        }) {
-            Text(text = "Login")
-        }
-        Button(onClick = {
-            navController.navigate("register")
         }) {
             Text(text = "Register")
         }
 
+
         // Show login status
-        if (loginStatus.isNotEmpty()) {
+        if (registerStatus.isNotEmpty()) {
             Text(
-                text = loginStatus,
-                color = if (loginStatus.startsWith("Login successful"))
+                text = registerStatus,
+                color = if (registerStatus.startsWith("Register successful"))
                     Color.Green else Color.Red,
                 modifier = Modifier.padding(top = 8.dp)
             )
+
         }
     }
 }

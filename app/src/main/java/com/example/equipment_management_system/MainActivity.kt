@@ -59,11 +59,21 @@ class MainActivity : ComponentActivity() {
                             Search_Equipment(navController)
                         }
                         composable ("user" ){
-                            loginInterface()
+                            loginInterface(navController)
+                        }
+                        composable("register"){
+                            Register(navController)
+                        }
+                        composable("location/{location}"){backStackEntry->
+                            LocationDetailScreen(navController,backStackEntry.arguments?.getString("location")?:"")
+
+                        }
+                        composable("location") {
+                            LocationsScreen(navController)
                         }
                         composable("equipments/{id}") { backStackEntry ->
                             // Extract the department id from the NavBackStackEntry's arguments
-                            Equipment_Detail( backStackEntry.arguments?.getString("id")?:"")
+                            Equipment_Detail( navController,backStackEntry.arguments?.getString("id")?:"")
                         }
                     }
                 }

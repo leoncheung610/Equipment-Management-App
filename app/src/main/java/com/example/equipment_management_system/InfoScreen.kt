@@ -1,2 +1,0 @@
-package com.example.equipment_management_system
-
