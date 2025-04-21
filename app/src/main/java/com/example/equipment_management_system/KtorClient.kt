@@ -7,6 +7,7 @@ import io.ktor.client.call.*
 import io.ktor.client.plugins.*
 import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
+import io.ktor.client.statement.bodyAsText
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.coroutines.delay
@@ -25,7 +26,7 @@ object KtorClient {
             accept(ContentType.Application.Json)
         }
     }
-
+    //Get Equipment List
     suspend fun getFeeds(page: Int): EquipmentResponse {
         return try {
             // Add page parameter to the URL
@@ -35,6 +36,7 @@ object KtorClient {
             EquipmentResponse(emptyList(), 0, page, 10)
         }
     }
+    //Search Equipment
     suspend fun search_equip(keyword:String,page: Int): EquipmentResponse {
         return try {
             // Add page parameter to the URL
@@ -45,16 +47,18 @@ object KtorClient {
         }
     }
 
-suspend fun getOneEquipment(id: String): Equipment? {
-        return try {
-            httpClient.get("https://equipments-api.azurewebsites.net/api/equipments/${id}")
-                .body<Equipment>()
-        } catch (e: Exception) {
-            Log.e("API", "Error fetching equipment data: ${e.message}", e)
-            null
-        }
+    suspend fun getOneEquipment(id: String): Equipment? {
+            return try {
+                 httpClient.get("https://equipments-api.azurewebsites.net/api/equipments/${id}")
+                    .body<Equipment>()
 
-    }
+
+            } catch (e: Exception) {
+                Log.e("API", "Error fetching equipment data: ${e.message}", e)
+                null
+            }
+
+        }
     fun getAllLocations(): Flow<List<String>> = flow {
         val locations = mutableSetOf<String>()
         var currentPage = 1
@@ -162,31 +166,53 @@ object LoginClient{
             "Register failed: ${e.message}"
         }
     }
-    // Then make the rental request with the token
-    suspend fun rentEquipment( startDate: String, returnDate: String): String {
+    // Then make the rental request with the equipment id
+    suspend fun rentEquipment( startDate: String, returnDate: String, equipment_ID: String): String {
         return try {
             // LoginClient should have the token stored after successful login
             val rentalRequest = RentalRequest(startDate, returnDate)
 
-            val response = httpClient.post("https://equipments-api.azurewebsites.net/api/equipments/$token/rent") {
+            val response = httpClient.post("https://equipments-api.azurewebsites.net/api/equipments/$equipment_ID/rent") {
                 header("Authorization", "Bearer $token")
                 contentType(ContentType.Application.Json)
                 setBody(rentalRequest)
             }
+            val responseBody = response.bodyAsText()
+            Log.i("API", "Reserve Equipment response: Status=${response.status}, Body=$responseBody")
 
-            "Equipment rented successfully"
+            if (response.status.isSuccess()) {
+                "Equipment rented successfully"
+            } else {
+                "Rental failed: ${response.status}"
+            }
         } catch (e: Exception) {
             Log.e("API", "Rental error: ${e.message}", e)
             "Rental failed: ${e.message}"
         }
     }
+    suspend fun unreserve_Equipment(id: String):String{
+        return try {
+            // LoginClient should have the token stored after successful login
+
+            val response = httpClient.delete("https://equipments-api.azurewebsites.net/api/equipments/$id/rent") {
+                header("Authorization", "Bearer $token")
+                contentType(ContentType.Application.Json)
+            }
+
+            "Equipment unreserved successfully"
+        } catch (e: Exception) {
+            Log.e("API", "Unreserved error: ${e.message}", e)
+            "Unreserved failed: ${e.message}"
+        }
+    }
+}
     @Serializable
     data class RentalRequest(
         val startDate: String,
         val returnDate: String
     )
 
-}
+
 
 //    suspend fun getFeeds(): List<Equipment> {
 //        return try {

@@ -83,14 +83,14 @@ fun LocationsScreen(navController: NavController) {
     }
 
     Column(modifier = Modifier.fillMaxSize()) {
-        TopAppBar(
-            title = { Text("Browse by Location") },
-            navigationIcon = {
-                IconButton(onClick = { navController.navigateUp() }) {
-                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
-                }
-            }
-        )
+//        TopAppBar(
+//            title = { Text("Browse by Location") },
+//            navigationIcon = {
+//                IconButton(onClick = { navController.navigateUp() }) {
+//                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+//                }
+//            }
+//        )
 
         if (isLoading) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -138,14 +138,14 @@ fun LocationDetailScreen(navController: NavController, location: String) {
     )
 
     Column(modifier = Modifier.fillMaxSize()) {
-        TopAppBar(
-            title = { Text("Equipment in $location") },
-            navigationIcon = {
-                IconButton(onClick = { navController.navigateUp() }) {
-                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
-                }
-            }
-        )
+//        TopAppBar(
+//            title = { Text("Equipment in $location") },
+//            navigationIcon = {
+//                IconButton(onClick = { navController.navigateUp() }) {
+//                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+//                }
+//            }
+//        )
 
         // Equipment list
         LazyColumn(

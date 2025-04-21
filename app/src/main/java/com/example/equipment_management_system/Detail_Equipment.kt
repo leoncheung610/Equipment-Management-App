@@ -57,31 +57,31 @@ fun Equipment_Detail(navController: NavController, Equipment_id: String) {
 
     val coroutineScope = rememberCoroutineScope()
 
-    // Function to check if user has rented this equipment
-    suspend fun checkRentalStatus() {
-        if (LoginClient.token.isEmpty()) return
-
-        try {
-            // Make a GET request to check rental status
-            val response = LoginClient.httpClient.get("https://equipments-api.azurewebsites.net/api/equipments/${Equipment_id}/rent") {
-                header("Authorization", "Bearer ${LoginClient.token}")
-            }
-            // If request succeeds, user has rented this equipment
-            isRented = response.status.isSuccess()
-        } catch (e: Exception) {
-            // If request fails, user hasn't rented this equipment
-            isRented = false
-            Log.e("API", "Error checking rental status: ${e.message}")
-        }
-    }
+//    // Function to check if user has rented this equipment
+//    suspend fun checkRentalStatus() {
+//        if (LoginClient.token.isEmpty()) return
+//
+//        try {
+//            // Make a GET request to check rental status
+//            val response = LoginClient.httpClient.get("https://equipments-api.azurewebsites.net/api/equipments/${Equipment_id}/rent") {
+//                header("Authorization", "Bearer ${LoginClient.token}")
+//            }
+//            // If request succeeds, user has rented this equipment
+//            isRented = response.status.isSuccess()
+//        } catch (e: Exception) {
+//            // If request fails, user hasn't rented this equipment
+//            isRented = false
+//            Log.e("API", "Error checking rental status: ${e.message}")
+//        }
+//    }
 
     // Load equipment data when composable is created
     LaunchedEffect(Equipment_id) {
         equipment = KtorClient.getOneEquipment(Equipment_id)
         // Only check rental status if user is logged in
-        if (LoginClient.token.isNotEmpty()) {
-            checkRentalStatus()
-        }
+//        if (LoginClient.token.isNotEmpty()) {
+//            checkRentalStatus()
+//        }
 
     }
 
@@ -123,41 +123,33 @@ fun Equipment_Detail(navController: NavController, Equipment_id: String) {
                         coroutineScope.launch {
                             actionInProgress = true
 
-                            if (isRented) {
-                                // Unreserve the equipment
-                                actionStatus = "Canceling reservation..."
-                                try {
-                                    LoginClient.httpClient.delete("https://equipments-api.azurewebsites.net/api/equipments/${Equipment_id}/rent") {
-                                        header("Authorization", "Bearer ${LoginClient.token}")
-                                    }
-                                    actionStatus = "Equipment unreserved successfully"
-                                    isRented = false
-                                } catch (e: Exception) {
-                                    actionStatus = "Failed to unreserve: ${e.message}"
-                                    Log.e("API", "Unreserve error: ${e.message}", e)
-                                }
-                            } else {
-                                // Reserve the equipment
-                                actionStatus = "Processing reservation..."
-                                try {
-                                    // Fix: Use correct equipment ID and formatted dates
-                                    val today = "2025-04-13"
-                                    val tomorrow = "2025-04-14"
-                                    val rentalRequest = LoginClient.RentalRequest(today, tomorrow)
+//                            if (isRented) {
+//                                // Unreserve the equipment
+//                                actionStatus = "Canceling reservation..."
+//                                val response= LoginClient.unreserve_Equipment(Equipment_id)
+//                                if (response.startsWith("Equipment")){
+//                                    actionStatus = "Equipment reserved successfully"
+//                                    isRented = false}
+//                                else {
+//                                    actionStatus="Fail to reserve the equipment"
+//                                }
+//
+//                            } else {
+                            // Reserve the equipment
+                            actionStatus = "Processing reservation..."
 
-                                    LoginClient.httpClient.post("https://equipments-api.azurewebsites.net/api/equipments/${Equipment_id}/rent") {
-                                        header("Authorization", "Bearer ${LoginClient.token}")
-                                        contentType(ContentType.Application.Json)
-                                        setBody(rentalRequest)
-                                    }
-                                    actionStatus = "Equipment reserved successfully"
-                                    isRented = true
-                                } catch (e: Exception) {
-                                    actionStatus = "Failed to reserve: ${e.message}"
-                                    Log.e("API", "Rental error: ${e.message}", e)
-                                }
+                            // Fix: Use correct equipment ID and formatted dates
+                            val today = "2025-04-13"
+                            val tomorrow = "2025-04-14"
+                            val response = LoginClient.rentEquipment(today, tomorrow, Equipment_id)
+                            if (response.startsWith("Equipment")) {
+                                actionStatus = "Equipment reserved successfully"
+                                isRented = true
+                            } else {
+                                actionStatus = "Fail to reserve the equipment"
                             }
 
+                        //}
                             actionInProgress = false
                         }
                     },
