@@ -66,7 +66,7 @@ import kotlin.math.ceil
 fun LocationsScreen(navController: NavController) {
 
     // Create a flow producer in a way that survives recompositions
-    val locationsFlow = remember { KtorClient.getAllLocations() }
+    val locationsFlow = remember { LoginClient.getAllLocations() }
 
 
     // Collect the flow as state with an initial empty list
@@ -132,7 +132,7 @@ fun LocationDetailScreen(navController: NavController, location: String) {
         key1 = currentPage,
         key2 = location,
         producer = {
-            value = KtorClient.getEquipmentByLocation(location, currentPage)
+            value = LoginClient.getEquipmentByLocation(location, currentPage)
             totalPages = ceil(value.total.toFloat() / value.perPage).toInt()
         }
     )

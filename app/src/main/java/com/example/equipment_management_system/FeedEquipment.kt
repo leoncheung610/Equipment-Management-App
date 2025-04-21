@@ -56,7 +56,8 @@ data class Equipment(
     val color: String,
     val highlight: Boolean,
     val created_at: String,
-    val modified_at: String
+    val modified_at: String,
+    val rented: Boolean? = false
 )
 
 
@@ -69,7 +70,7 @@ fun FeedScreen(navController: NavController) {
         initialValue = EquipmentResponse(emptyList(), 0, 1, 10),
         key1 = currentPage, // Reload when page changes
         producer = {
-            value = KtorClient.getFeeds(currentPage)
+            value = LoginClient.getFeeds(currentPage)
             totalPages = ceil(value.total.toFloat() / value.perPage).toInt()
         }
     )
@@ -81,7 +82,7 @@ fun FeedScreen(navController: NavController) {
         ) {
             items(equipmentResponse.equipments) { feed ->
                 Card(
-                    onClick = { navController.navigate("equipments/${feed._id}") },
+                    onClick = { navController.navigate("equipments/${feed._id}/${feed.rented}") },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(300.dp)

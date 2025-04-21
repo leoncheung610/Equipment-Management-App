@@ -60,7 +60,7 @@ fun Search_Equipment(navController: NavController) {
         key1 = currentPage, // Reload when page changes
         key2= keyword,
         producer = {
-            value = KtorClient.search_equip(keyword,currentPage)
+            value = LoginClient.search_equip(keyword,currentPage)
             totalPages = ceil(value.total.toFloat() / value.perPage).toInt()
         }
     )

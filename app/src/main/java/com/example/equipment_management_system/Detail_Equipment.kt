@@ -44,11 +44,10 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Equipment_Detail(navController: NavController, Equipment_id: String) {
+fun Equipment_Detail(navController: NavController, Equipment_id: String,rented:Boolean) {
     // Equipment data state
     var equipment by remember { mutableStateOf<Equipment?>(null) }
-    // Track if the user has already rented this equipment
-    var isRented by remember { mutableStateOf(false) }
+    var isRented by remember { mutableStateOf(rented) }
     // Loading states
     var isLoading by remember { mutableStateOf(true) }
     var actionInProgress by remember { mutableStateOf(false) }
@@ -57,31 +56,11 @@ fun Equipment_Detail(navController: NavController, Equipment_id: String) {
 
     val coroutineScope = rememberCoroutineScope()
 
-//    // Function to check if user has rented this equipment
-//    suspend fun checkRentalStatus() {
-//        if (LoginClient.token.isEmpty()) return
-//
-//        try {
-//            // Make a GET request to check rental status
-//            val response = LoginClient.httpClient.get("https://equipments-api.azurewebsites.net/api/equipments/${Equipment_id}/rent") {
-//                header("Authorization", "Bearer ${LoginClient.token}")
-//            }
-//            // If request succeeds, user has rented this equipment
-//            isRented = response.status.isSuccess()
-//        } catch (e: Exception) {
-//            // If request fails, user hasn't rented this equipment
-//            isRented = false
-//            Log.e("API", "Error checking rental status: ${e.message}")
-//        }
-//    }
 
     // Load equipment data when composable is created
     LaunchedEffect(Equipment_id) {
-        equipment = KtorClient.getOneEquipment(Equipment_id)
-        // Only check rental status if user is logged in
-//        if (LoginClient.token.isNotEmpty()) {
-//            checkRentalStatus()
-//        }
+        equipment = LoginClient.getOneEquipment(Equipment_id)
+        isRented = equipment?.rented ?: rented
 
     }
 
@@ -123,33 +102,34 @@ fun Equipment_Detail(navController: NavController, Equipment_id: String) {
                         coroutineScope.launch {
                             actionInProgress = true
 
-//                            if (isRented) {
-//                                // Unreserve the equipment
-//                                actionStatus = "Canceling reservation..."
-//                                val response= LoginClient.unreserve_Equipment(Equipment_id)
-//                                if (response.startsWith("Equipment")){
-//                                    actionStatus = "Equipment reserved successfully"
-//                                    isRented = false}
-//                                else {
-//                                    actionStatus="Fail to reserve the equipment"
-//                                }
-//
-//                            } else {
+                            if (isRented) {
+                                // Unreserve the equipment
+                                actionStatus = "Canceling reservation..."
+                                val response= LoginClient.unreserve_Equipment(Equipment_id)
+                                if (response.startsWith("Equipment")){
+                                    actionStatus = "Equipment reserved successfully"
+                                    equipment = LoginClient.getOneEquipment(Equipment_id)
+                                    isRented=false
+                                }
+                                else {
+                                    actionStatus="Fail to reserve the equipment"
+                                }
+                            } else {
                             // Reserve the equipment
                             actionStatus = "Processing reservation..."
-
                             // Fix: Use correct equipment ID and formatted dates
                             val today = "2025-04-13"
                             val tomorrow = "2025-04-14"
                             val response = LoginClient.rentEquipment(today, tomorrow, Equipment_id)
                             if (response.startsWith("Equipment")) {
                                 actionStatus = "Equipment reserved successfully"
-                                isRented = true
+                                equipment = LoginClient.getOneEquipment(Equipment_id)
+                                isRented=true
                             } else {
                                 actionStatus = "Fail to reserve the equipment"
                             }
 
-                        //}
+                        }
                             actionInProgress = false
                         }
                     },

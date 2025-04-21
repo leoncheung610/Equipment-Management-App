@@ -108,9 +108,11 @@ class MainActivity : ComponentActivity() {
                         composable("location") {
                             LocationsScreen(navController)
                         }
-                        composable("equipments/{id}") { backStackEntry ->
+                        composable("equipments/{id}/{rented}") { backStackEntry ->
                             // Extract the department id from the NavBackStackEntry's arguments
-                            Equipment_Detail( navController,backStackEntry.arguments?.getString("id")?:"")
+                            Equipment_Detail( navController,backStackEntry.arguments?.getString("id")?:"",
+                                backStackEntry.arguments?.getBoolean("rented") == true
+                            )
                         }
                     }
                 }
