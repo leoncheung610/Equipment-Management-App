@@ -96,7 +96,11 @@ class MainActivity : ComponentActivity() {
                             Search_Equipment(navController)
                         }
                         composable ("user" ){
-                            loginInterface(navController)
+                            if (LoginClient.token.isEmpty()) {
+                                loginInterface(navController)
+                            } else {
+                                After_login_screen(navController)
+                            }
                         }
                         composable("register"){
                             Register(navController)
@@ -113,6 +117,9 @@ class MainActivity : ComponentActivity() {
                             Equipment_Detail( navController,backStackEntry.arguments?.getString("id")?:"",
                                 backStackEntry.arguments?.getBoolean("rented") == true
                             )
+                        }
+                        composable("after_login") {
+                            After_login_screen(navController)
                         }
                     }
                 }

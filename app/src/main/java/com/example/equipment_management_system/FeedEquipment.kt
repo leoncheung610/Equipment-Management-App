@@ -74,13 +74,14 @@ fun FeedScreen(navController: NavController) {
             totalPages = ceil(value.total.toFloat() / value.perPage).toInt()
         }
     )
-
+    // Filter to show only highlighted equipment
+    val highlightedEquipment = equipmentResponse.equipments.filter { it.highlight }
     Column {
         // Equipment list
         LazyColumn(
             modifier = Modifier.weight(1f)
         ) {
-            items(equipmentResponse.equipments) { feed ->
+            items(highlightedEquipment) { feed ->
                 Card(
                     onClick = { navController.navigate("equipments/${feed._id}/${feed.rented}") },
                     modifier = Modifier

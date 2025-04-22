@@ -211,6 +211,40 @@ object LoginClient{
         // Emit one final time to ensure we've emitted the complete list
         emit(locations.toList().sorted())
     }
+
+    fun getAllRentedByUser(): Flow<List<Equipment>> = flow {
+        val allRentedEquipment = mutableListOf<Equipment>()
+        var currentPage = 1
+        var hasMorePages = true
+
+        try {
+            while (hasMorePages) {
+                // Make API request with auth token
+                val response = httpClient.get("https://equipments-api.azurewebsites.net/api/equipments/?page=$currentPage") {
+                }.body<EquipmentResponse>()
+
+                // Filter only rented equipment
+                response.equipments.forEach { equipment ->
+                    if (equipment.rented == true) {
+                        allRentedEquipment.add(equipment)
+                    }
+                }
+                emit(allRentedEquipment)
+                // Check if there are more pages
+                val totalPages = ceil(response.total.toFloat() / response.perPage).toInt()
+                hasMorePages = currentPage < totalPages
+                currentPage++
+
+                delay(200) // Small delay to avoid overloading the API
+            }
+
+            // Emit the complete list after collecting all items
+            emit(allRentedEquipment)
+        } catch (e: Exception) {
+            Log.e("API", "Error fetching rented equipment: ${e.message}", e)
+            emit(emptyList()) // Emit empty list on error
+        }
+    }
     // Function to get equipment by location
     suspend fun getEquipmentByLocation(location: String, page: Int): EquipmentResponse {
         return try {
@@ -233,6 +267,16 @@ object LoginClient{
             Log.e("API", "Login error: ${e.message}", e)
             "Login failed: ${e.message}"
     }
+    }
+    suspend fun logout(): String {
+        return try{
+            this.httpClient.post("https://equipments-api.azurewebsites.net/api/logout")
+            token= ""
+            "Logout successful "
+        }catch (e: Exception){
+            Log.e("API", "Logout error: ${e.message}", e)
+            "Logout failed: ${e.message}"
+        }
     }
     //Create a user account
     suspend fun register(email: String, password: String,contact: String,department: String,remark: String): String {

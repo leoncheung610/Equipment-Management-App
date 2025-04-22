@@ -33,6 +33,14 @@ fun loginInterface(navController: NavController){
     var loginStatus by remember { mutableStateOf("") }
     val coroutineScope = rememberCoroutineScope()
 
+    if (LoginClient.token.isNotEmpty()) {
+        // If already logged in, navigate to the after_login screen
+        navController.navigate("after_login") {
+            // Clear backstack so user can't go back to login screen
+            popUpTo("user") { inclusive = true }
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -75,12 +83,20 @@ fun loginInterface(navController: NavController){
 
         // Show login status
         if (loginStatus.isNotEmpty()) {
-            Text(
-                text = loginStatus,
-                color = if (loginStatus.startsWith("Login successful"))
-                    Color.Green else Color.Red,
-                modifier = Modifier.padding(top = 8.dp)
-            )
+            if (loginStatus.startsWith("Login successful")) {
+                Text(
+                    text = loginStatus,
+                    color = Color.Green,
+                    modifier = Modifier.padding(top = 8.dp)
+                )
+                navController.navigate("after_login")
+            } else {
+                Text(
+                    text = loginStatus,
+                    color = Color.Red,
+                    modifier = Modifier.padding(top = 8.dp)
+                )
+            }
         }
     }
 }

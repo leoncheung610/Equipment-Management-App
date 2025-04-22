@@ -50,17 +50,7 @@ import coil3.compose.AsyncImage
 import kotlinx.coroutines.launch
 import kotlin.math.ceil
 
-//object LocationsRepository {
-//    private var cachedLocations: List<String> = emptyList()
-//
-//    suspend fun getLocations(): List<String> {
-//        if (cachedLocations.isEmpty()) {
-//            cachedLocations = KtorClient.getAllLocations()
-//        }
-//        return cachedLocations
-//    }
-//
-//}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LocationsScreen(navController: NavController) {
@@ -83,15 +73,6 @@ fun LocationsScreen(navController: NavController) {
     }
 
     Column(modifier = Modifier.fillMaxSize()) {
-//        TopAppBar(
-//            title = { Text("Browse by Location") },
-//            navigationIcon = {
-//                IconButton(onClick = { navController.navigateUp() }) {
-//                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
-//                }
-//            }
-//        )
-
         if (isLoading) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 CircularProgressIndicator()

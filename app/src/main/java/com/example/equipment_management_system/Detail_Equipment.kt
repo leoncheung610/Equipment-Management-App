@@ -4,11 +4,14 @@ import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
@@ -17,6 +20,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -138,36 +142,43 @@ fun Equipment_Detail(navController: NavController, Equipment_id: String,rented:B
 
 
    if (equipment != null) {
-        Column(modifier = Modifier.fillMaxWidth())
+        Column(modifier = Modifier.fillMaxWidth()
+            .verticalScroll(rememberScrollState())
+        )
         {
-            TopAppBar(
-                title = { Text("${equipment?.name} Detail") },
-                navigationIcon = {
-                    IconButton(onClick = { navController.navigateUp() }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
-                    }
-                }
-            )
             Card(
                 onClick = { /* Do something */ },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(300.dp)
             ) {
-                Column {
                     AsyncImage(
                         model = equipment!!.image,
                         contentDescription = null,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(200.dp)
+                            .fillMaxHeight()
                     )
-                    Text(equipment!!.name)
-                    Text(equipment!!.description)
-                    // Add more details as needed
-                }
+
+            }
+            // Equipment details section
+            Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+                Text("Name: " + equipment!!.name, style = MaterialTheme.typography.titleLarge)
+                Spacer(modifier = Modifier.height(8.dp))
+                Text("Contact Person: " + equipment!!.contact_person)
+                Spacer(modifier = Modifier.height(8.dp))
+                Text("Description: \n" + equipment!!.description)
+                HorizontalDivider(modifier= Modifier.padding(vertical = 8.dp) )
+                Text("Location: " + equipment!!.location)
+                HorizontalDivider(modifier= Modifier.padding(vertical = 8.dp))
+                Text("Color: " + equipment!!.color)
+                HorizontalDivider(modifier= Modifier.padding(vertical = 8.dp))
+                Text("Created at: " + equipment!!.created_at)
+                HorizontalDivider(modifier= Modifier.padding(vertical = 8.dp))
+                Text("Modified at: " + equipment!!.modified_at)
             }
 
+            Spacer(modifier = Modifier.height(16.dp))
             // Only show reservation button if user is logged in
             if (LoginClient.token.isNotEmpty()) {
 
