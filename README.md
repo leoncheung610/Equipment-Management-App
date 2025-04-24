@@ -3,7 +3,7 @@
 ## Setup Instruction
 
 **Open Android Studio, Enable Version Control, Clone using the web URL:**  
-https://github.com/UG-CS-HKBU/android-equipments-spring-2025-LeonCheung2223.git
+[https://github.com/leoncheung610/Equipment-Management-App.git](https://github.com/leoncheung610/Equipment-Management-App.git)
 
 ---
 
