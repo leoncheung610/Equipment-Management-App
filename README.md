@@ -15,3 +15,4 @@ Display Rented Equipment.
 Reserve and Unreseve Equipment
 <img src="screenshots/reserve.png" alt="Rented Equipment" width="200" height="500"/>
 
+

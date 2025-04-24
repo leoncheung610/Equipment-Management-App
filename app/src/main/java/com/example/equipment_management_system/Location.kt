@@ -119,15 +119,7 @@ fun LocationDetailScreen(navController: NavController, location: String) {
     )
 
     Column(modifier = Modifier.fillMaxSize()) {
-//        TopAppBar(
-//            title = { Text("Equipment in $location") },
-//            navigationIcon = {
-//                IconButton(onClick = { navController.navigateUp() }) {
-//                    Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
-//                }
-//            }
-//        )
-
+//
         // Equipment list
         LazyColumn(
             modifier = Modifier.weight(1f),
@@ -135,7 +127,7 @@ fun LocationDetailScreen(navController: NavController, location: String) {
         ) {
             items(equipmentResponse.equipments) { equipment ->
                 Card(
-                    onClick = { navController.navigate("equipments/${equipment._id}") },
+                    onClick = { navController.navigate("equipments/${equipment._id}/${equipment.rented}") },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(300.dp)

@@ -105,7 +105,7 @@ fun Search_Equipment(navController: NavController) {
         ) {
             items(equipmentResponse.equipments) { feed ->
                 Card(
-                    onClick = { navController.navigate("equipments/${feed._id}") },
+                    onClick = { navController.navigate("equipments/${feed._id}/${feed.rented}") },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(300.dp)
