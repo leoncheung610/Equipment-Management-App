@@ -2,7 +2,7 @@
 
 ## Setup Instruction
 
-**Open Android Studio, Clone using the web URL:**  
+**Open Android Studio, Enable Version Control, Clone using the web URL:**  
 https://github.com/UG-CS-HKBU/android-equipments-spring-2025-LeonCheung2223.git
 
 ---
