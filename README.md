@@ -5,6 +5,6 @@ Find equipment by location
 
 Search Equipment by name
 Display Highlighted Equipment 
-![Highlighted Equipment](screenshots/highlighted_equipment.png)
+<img src="screenshots/highlighted_equipment.png" alt="Highlighted Equipment" width="200" height="200"/>
 Login, Logout and Register
 Display Reserved Equipment.
